@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Form - {{ parent() }}{% endblock %}
+
+{% block content %}
+<h1>Form</h1>
+<form action="{{ path('form') }}" method="post">
+    {{ form_widget(form) }}
+
+    <input type="submit" name="submit" />
+</form>
+{% endblock %}

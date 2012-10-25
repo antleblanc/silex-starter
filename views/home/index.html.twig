@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block content %}
+    <h1>Hello World</h1>
+    <ul>
+        <li><a href="{{ path('hello', { name : 'Antoine' }) }}">View hello page</a></li>
+        <li><a href="{{ path('form') }}">View form page</a></li>
+    </ul>
+{% endblock %}
