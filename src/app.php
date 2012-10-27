@@ -1,44 +1,40 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
-
 use Silex\Application;
+use Silex\Provider\TwigServiceProvider;
+use Silex\Provider\UrlGeneratorServiceProvider;
+use Silex\Provider\SessionServiceProvider;
+use Silex\Provider\ValidatorServiceProvider;
+use Silex\Provider\TranslationServiceProvider;
+use Silex\Provider\FormServiceProvider;
+use Silex\Provider\SwiftmailerServiceProvider;
+use Silex\Provider\DoctrineServiceProvider;
 
 $app = new Application();
 
-require __DIR__.'/bootstrap.php';
-require __DIR__.'/controller.php';
-
-// BEFORE
-$app->before(function () use ($app) {
-    
-});
-
-// GET 
-$app->get('/', function () use ($app) {
-    return $app['twig']->render('home/index.html.twig', array());
-})
-->bind('homepage');
-
-$app->get('/hello/{name}', function ($name) use ($app) {
-    return $app['twig']->render('hello/index.html.twig', array(
-        'name' => $name,
-    ));
-})
-->bind('hello')
-->value('name', 'World');
-
-// ERROR
-$app->error(function (\Exception $e, $code) use ($app) {
-    if ($app['debug']) {
-        return;
-    }
-
-    $error = 404 == $code ? $e->getMessage() : null;
-
-    return new Response($app['twig']->render('error/index.html.twig', array(
-        'error' => $error
-    )), $code);
-});
+$app->register(new TwigServiceProvider(), array(
+    'twig.path'    => __DIR__.'/../views',
+    'twig.options' => array(
+        'cache' => __DIR__.'/../cache/twig',
+        'debug' => true,
+    ),
+));
+$app->register(new UrlGeneratorServiceProvider());
+$app->register(new SessionServiceProvider());
+$app->register(new ValidatorServiceProvider());
+$app->register(new TranslationServiceProvider(), array(
+    'translator.messages' => array(),
+));
+$app->register(new FormServiceProvider());
+$app->register(new SwiftmailerServiceProvider());
+$app->register(new DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'driver'    => 'pdo_mysql',
+        'host'      => 'localhost',
+        'dbname'    => 'my_database',
+        'user'      => 'my_username',
+        'password'  => 'my_password',
+    ),
+));
 
 return $app;

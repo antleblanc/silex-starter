@@ -6,6 +6,25 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormError;
 
+// BEFORE
+$app->before(function () use ($app) {
+    
+});
+
+// GET 
+$app->get('/', function () use ($app) {
+    return $app['twig']->render('home/index.html.twig', array());
+})
+->bind('homepage');
+
+$app->get('/hello/{name}', function ($name) use ($app) {
+    return $app['twig']->render('hello/index.html.twig', array(
+        'name' => $name,
+    ));
+})
+->bind('hello')
+->value('name', 'World');
+
 // MATCH
 $app->match('/form', function(Request $request) use ($app) {
     $form = $app['form.factory']->createBuilder('form')
@@ -40,6 +59,7 @@ $app->match('/form', function(Request $request) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
+            $app['monolog']->addInfo('Form submitted.');
             $app['session']->getFlashBag()->add('notice', 'Vos informations ont été sauvegardées!');
 
             // do something with the data
@@ -53,3 +73,16 @@ $app->match('/form', function(Request $request) use ($app) {
     ));
 })
 ->bind('form');
+
+// ERROR
+$app->error(function (\Exception $e, $code) use ($app) {
+    if ($app['debug']) {
+        return;
+    }
+
+    $error = 404 == $code ? $e->getMessage() : null;
+
+    return new Response($app['twig']->render('error/index.html.twig', array(
+        'error' => $error
+    )), $code);
+});

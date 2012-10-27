@@ -12,6 +12,7 @@
         "php": ">=5.3.3",
         "doctrine/common": ">2.2,<2.4-dev",
         "doctrine/dbal": ">=2.2,<2.4-dev",
+        "monolog/monolog": ">=1.0.0",
         "silex/silex": "1.0.*",
         "twig/twig": ">=1.9.1,<2.0-dev",
         "twig/extensions" : "*",
