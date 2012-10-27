@@ -8,7 +8,9 @@ class FunctionalTest extends WebTestCase
     {
         $app = require __DIR__.'/../src/app.php';
 
-        require __DIR__.'/../config/dev.php';
+        $env = 'prod';
+
+        require __DIR__.'/../config/'.$env.'.php';
         require __DIR__.'/../src/controllers.php';
 
         $app['session.test'] = true;

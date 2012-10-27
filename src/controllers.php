@@ -59,7 +59,7 @@ $app->match('/form', function(Request $request) use ($app) {
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $app['monolog']->addInfo('Form submitted.');
+            ($app['debug']) ? $app['monolog']->addInfo('Form submitted.') : '';
             $app['session']->getFlashBag()->add('notice', 'Vos informations ont été sauvegardées!');
 
             // do something with the data
